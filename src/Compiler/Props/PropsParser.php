@@ -40,6 +40,13 @@ final class PropsParser
             $name    = $m[1];
             $nullable = $m[2] === '?';
             $typeRaw = trim($m[3]);
+
+            // Support PHP-style nullable prefix: ?string → nullable=true, type=string
+            if (str_starts_with($typeRaw, '?')) {
+                $nullable = true;
+                $typeRaw  = substr($typeRaw, 1);
+            }
+
             $isClass = !in_array($typeRaw, self::PRIMITIVES, true);
             $type    = $isClass ? '\\' . str_replace('/', '\\', $typeRaw) : $typeRaw;
 
