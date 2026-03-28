@@ -30,7 +30,7 @@ final class Sharp
 
     public function __construct(string $rootDir = null)
     {
-        $this->config     = Config::load($rootDir ?? getcwd());
+        $this->config     = Config::load($rootDir);
         $this->cache      = new FileCache(
             $this->config->getCachePath(),
             $this->config->getGraphPath(),
