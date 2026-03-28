@@ -80,7 +80,8 @@ final class Config
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-        $json = json_encode(self::DEFAULTS, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+        $config = array_merge(self::DEFAULTS, ['devMode' => true]);
+        $json   = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
         file_put_contents($path, $json);
     }
 
