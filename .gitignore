@@ -1,0 +1,12 @@
+/vendor/
+/.phpunit.result.cache
+/coverage/
+/.phpunit.cache/
+
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+/.claude/
