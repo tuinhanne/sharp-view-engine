@@ -2,7 +2,6 @@
 
 namespace Sharp\Compiler\Ast\Nodes;
 
-use Sharp\Compiler\Annotation\HtmlAnnotator;
 use Sharp\Compiler\Ast\Node;
 use Sharp\Compiler\Ast\NodeType;
 use Sharp\Compiler\CompilationContext;
@@ -18,9 +17,6 @@ final class TextNode extends Node
 
     public function compile(CompilationContext $ctx): string
     {
-        if (!$ctx->devMode) {
-            return $this->content;
-        }
-        return HtmlAnnotator::inject($this->content, $ctx->absoluteSpPath, $this->line);
+        return $this->content;
     }
 }

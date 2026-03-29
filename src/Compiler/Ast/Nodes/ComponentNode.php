@@ -53,7 +53,7 @@ final class ComponentNode extends Node
             "\$__rMs = (hrtime(true) - \$__rStart) / 1e6;",
             "\$__dbgHit = \\Sharp\\Runtime\\Debug\\DebugRegistry::getInstance()->popCacheHit();",
             "echo \\Sharp\\Runtime\\Annotation\\RuntimeAnnotator::wrap(",
-            "\$__rOut, '{$spPath}', {$line}, '{$cname}', {$props}, array_keys({$slots}), \$__rMs, \$__dbgId, \$__dbgHit",
+            "\$__rOut, '{$cname}', {$props}, array_keys({$slots}), \$__rMs, \$__dbgId, \$__dbgHit",
             "); ?>",
         ]);
     }
