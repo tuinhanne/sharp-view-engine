@@ -21,7 +21,7 @@ final class RenderComponentTest extends TestCase
             json_encode(['viewPath' => 'templates/', 'sandbox' => false]),
         );
 
-        $this->sharp = new Sharp($this->tmpDir);
+        $this->sharp = (new Sharp($this->tmpDir))->setProduction(true);
     }
 
     protected function tearDown(): void

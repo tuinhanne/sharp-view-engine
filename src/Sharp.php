@@ -6,6 +6,7 @@ use Sharp\Compiler\Compiler;
 use Sharp\Contract\LoaderInterface;
 use Sharp\Loader\{FileLoader, MemoryLoader, NamespaceLoader};
 use Sharp\Runtime\Component\{ComponentRegistry, ComponentRenderer};
+use Sharp\Runtime\Debug\DebugRegistry;
 use Sharp\Runtime\Directive\DirectiveRegistry;
 use Sharp\Runtime\Environment;
 use Sharp\Runtime\Layout\LayoutManager;
@@ -89,8 +90,14 @@ final class Sharp
      */
     public function render(string $view, array $data = []): string
     {
-        $this->compiler->setDevMode($this->isDevMode());
+        $devMode = $this->isDevMode();
+        $this->compiler->setDevMode($devMode);
         $this->layoutManager->reset();
+
+        // Reset debug registry at the start of each render (dev mode only)
+        if ($devMode) {
+            DebugRegistry::reset();
+        }
 
         $path   = $this->compiler->compile($view);
         $output = $this->executeTemplate($path, $data);
@@ -100,6 +107,13 @@ final class Sharp
             $parentKey  = $this->layoutManager->consumeParent();
             $parentPath = $this->compiler->compile($parentKey);
             $output     = $this->executeTemplate($parentPath, $data);
+        }
+
+        // Inject debug data before </body> (dev mode only)
+        if ($devMode) {
+            $scriptTag = DebugRegistry::getInstance()->getScriptTag();
+            $output    = str_ireplace('</body>', $scriptTag . '</body>', $output);
+            DebugRegistry::reset();
         }
 
         return $output;

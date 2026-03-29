@@ -7,6 +7,7 @@ use Sharp\Compiler\Parser\Parser;
 use Sharp\Compiler\Pipeline\{CodeGeneration, DependencyGraph, OptimizePass, SourceMapBuilder};
 use Sharp\Contract\LoaderInterface;
 use Sharp\Runtime\Component\ComponentRegistry;
+use Sharp\Runtime\Debug\DebugRegistry;
 use Sharp\Runtime\Directive\DirectiveRegistry;
 use Sharp\Security\AstValidator;
 use Sharp\Sharp;
@@ -131,6 +132,10 @@ final class Compiler
         $key   = 'fp:' . $absolutePath;
 
         if ($this->cache->has($key, $mtime)) {
+            // In dev mode, report cache hit so generated code can read it via popCacheHit()
+            if ($this->devMode) {
+                DebugRegistry::getInstance()->pushCacheHit(true);
+            }
             return $this->cache->getPath($key);
         }
 
@@ -163,6 +168,8 @@ final class Compiler
             $builder = new SourceMapBuilder();
             $php     = $builder->generate($ast, $ctx);
             $this->cache->writeAst($key, $builder->getAst($absolutePath, $viewName));
+            // Cache miss — report so generated code can read it via popCacheHit()
+            DebugRegistry::getInstance()->pushCacheHit(false);
         } else {
             $php = (new CodeGeneration())->generate($ast, $ctx);
         }

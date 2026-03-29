@@ -20,7 +20,7 @@ final class RenderIncludeTest extends TestCase
             json_encode(['viewPath' => 'templates/', 'sandbox' => false]),
         );
 
-        $this->sharp = new Sharp($this->tmpDir);
+        $this->sharp = (new Sharp($this->tmpDir))->setProduction(true);
     }
 
     protected function tearDown(): void
@@ -82,7 +82,7 @@ final class RenderIncludeTest extends TestCase
         $this->template('partials.footer', '<footer>v2</footer>');
 
         // Re-instantiate Sharp so the cache-check runs fresh
-        $this->sharp = new Sharp($this->tmpDir);
+        $this->sharp = (new Sharp($this->tmpDir))->setProduction(true);
         $out2 = $this->sharp->render('page2');
         self::assertStringContainsString('v2', $out2);
     }

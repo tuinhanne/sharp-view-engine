@@ -42,7 +42,20 @@ final class ComponentNode extends Node
         $line   = $this->line;
         $cname  = addslashes($this->name);
 
-        return "<?php echo \\Sharp\\Runtime\\Annotation\\RuntimeAnnotator::wrap({$render}, '{$spPath}', {$line}, '{$cname}'); ?>";
+        // Dev mode: track render time, cache hit, and component ID via DebugRegistry,
+        // then annotate the output HTML with data-sharp-* attributes.
+        return implode('', [
+            '<?php ',
+            "\$__dbgId = \\Sharp\\Runtime\\Debug\\DebugRegistry::getInstance()",
+            "->pushComponent('{$cname}', '{$spPath}', {$line}, {$props}, array_keys({$slots}));",
+            "\$__rStart = hrtime(true);",
+            "\$__rOut = {$render};",
+            "\$__rMs = (hrtime(true) - \$__rStart) / 1e6;",
+            "\$__dbgHit = \\Sharp\\Runtime\\Debug\\DebugRegistry::getInstance()->popCacheHit();",
+            "echo \\Sharp\\Runtime\\Annotation\\RuntimeAnnotator::wrap(",
+            "\$__rOut, '{$spPath}', {$line}, '{$cname}', {$props}, array_keys({$slots}), \$__rMs, \$__dbgId, \$__dbgHit",
+            "); ?>",
+        ]);
     }
 
     private function compileProps(): string
