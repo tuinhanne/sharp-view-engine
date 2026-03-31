@@ -43,7 +43,7 @@ final class Compiler
     {
         $loader = $this->resolveLoader($viewKey);
         $mtime  = $loader->getLastModified($viewKey);
-        $key    = $loader->getKey($viewKey);
+        $key    = $loader->getKey($viewKey) . ($this->devMode ? ':dev' : ':prod');
 
         // Check dependency graph for invalidation
         $graphRecord = $this->cache->readGraph($key);
@@ -129,7 +129,7 @@ final class Compiler
     public function compileFilePath(string $absolutePath): string
     {
         $mtime = file_exists($absolutePath) ? (int) filemtime($absolutePath) : 0;
-        $key   = 'fp:' . $absolutePath;
+        $key   = 'fp:' . $absolutePath . ($this->devMode ? ':dev' : ':prod');
 
         if ($this->cache->has($key, $mtime)) {
             // In dev mode, report cache hit so generated code can read it via popCacheHit()
