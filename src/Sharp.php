@@ -68,16 +68,16 @@ final class Sharp
     /**
      * Set whether the engine runs in production mode.
      *
-     * - `false` (default): dev mode — injects `data-sharp-src` annotations into rendered HTML
-     *   and writes `.ast` source-map files to `.sharp/ast/`. Use during local development.
-     * - `true`: production mode — no annotations, no `.ast` files written. Use when deploying.
+     * - `true` (default when called with no argument): production mode — no annotations,
+     *   no `.ast` files written. Use when deploying.
+     * - `false`: dev mode — injects `data-sharp-src` annotations and writes `.ast` files.
      *
      * Priority chain (highest → lowest):
      *   1. This method (`setProduction()`)
      *   2. `"devMode"` field in `sharp.config.json`
      *   3. Default: dev mode on (`false`)
      */
-    public function setProduction(bool $isProduction): static
+    public function setProduction(bool $isProduction = true): static
     {
         $this->productionOverride = $isProduction;
         return $this;
