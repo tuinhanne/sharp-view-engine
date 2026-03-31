@@ -109,7 +109,12 @@ final class Sharp
             $output     = $this->executeTemplate($parentPath, $data);
         }
 
-        // Inject debug data before </body> (dev mode only)
+        // Signal Sharp presence via response header (read by DevTools extension via HAR).
+        if (!headers_sent()) {
+            header('X-Powered-By: Sharp');
+        }
+
+        // Inject debug data before </body> in dev mode only.
         if ($devMode) {
             $scriptTag = DebugRegistry::getInstance()->getScriptTag();
             $output    = str_ireplace('</body>', $scriptTag . '</body>', $output);

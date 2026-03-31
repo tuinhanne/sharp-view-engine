@@ -150,7 +150,7 @@ final class DebugRegistry
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
         );
 
-        return "\n<script id=\"__sharp_debug__\">\nwindow.__sharpDebugData = {$json};\n</script>\n";
+        return "\n<script id=\"__SHARP_DEBUG__\">\nwindow.__sharpDebugData = {$json};\n</script>\n";
     }
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
